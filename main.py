@@ -35,6 +35,7 @@ def main(args):
             image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter)
             adv_cap = img_2_cap(model, image_adv)[0]
             print("Adv cap: ", adv_cap)
+            print("Best fitness: ", best_fitness)
             torchvision.utils.save_image(image_adv, os.path.join(args.ouptut_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
             

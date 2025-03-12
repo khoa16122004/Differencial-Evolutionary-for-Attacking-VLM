@@ -13,7 +13,7 @@ def DE_Attack(image, pop_size, fitness, sigma, F, CR, max_iter):
     # print("pop shape: ", pop.shape)
     score = fitness.benchmark(pop)
     # print("score shape: ", score.shape)
-    for _ in range(max_iter):
+    for _ in tqdm(range(max_iter)):
         r1, r2, r3 = [], [], []
         for i in range(pop_size):
             r1_, r_2, r_3 = np.random.choice([idx for idx in range(pop_size) if idx != i], size=3, replace=False) # not duplicated sample

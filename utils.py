@@ -79,7 +79,7 @@ class Fitness:
     @torch.no_grad()
     def encode_text(self, txt):
         token = clip.tokenize(txt)
-        txt_embedding = self.clip_model(token)
+        txt_embedding = self.clip_model.encode_text(token)
         txt_embedding = txt_embedding / txt_embedding.norm(dim=1, keepdim=True)
         
         return txt_embedding

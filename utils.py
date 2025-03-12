@@ -69,13 +69,14 @@ class ImageCaptionDataset(Dataset):
 
 
 class Fitness:
-    def __init__(self, image, c_tar, clip_model, sigma, alpha):
+    def __init__(self, image, pop_size, c_tar, clip_model, sigma, alpha):
         self.image = image
         self.c_tar = c_tar
         self.clip_model = clip_model
         self.c_tar_embedding = self.encode_text(c_tar)
         self.sigma = sigma
         self.alpha = alpha
+        self.pop_size = pop_size
         
     @torch.no_grad()
     def encode_text(self, txt):

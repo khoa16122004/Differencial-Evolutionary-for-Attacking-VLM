@@ -31,7 +31,7 @@ def main(args):
             image = image.unsqueeze(0)
             
             c_clean = img_2_cap(model, image)[0]
-            fitness = Fitness(image, tar_txt, clip_img_model_vitb32, args.sigma, args.alpha)
+            fitness = Fitness(image, args.pop_size, tar_txt, clip_img_model_vitb32, args.sigma, args.alpha)
             image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter)
             adv_cap = img_2_cap(model, image_adv)[0]
             

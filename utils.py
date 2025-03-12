@@ -92,8 +92,8 @@ class Fitness:
         image_advs = torch.clamp(image_advs, 0., 1.)
         print("image_advs: ", image_advs.shape)
         c_advs = img_2_cap(self.model, image_advs)
-        print("len ADV caption: ", c_advs)
+        print("len ADV caption: ", len(c_advs))
         c_adv_embeddings = self.encode_text(c_advs)
 
-        fitness = torch.sum(self.txt_embedding * c_adv_embeddings, dim=1)
+        fitness = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
         return fitness

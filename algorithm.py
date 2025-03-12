@@ -9,7 +9,7 @@ def DE_Attack(image, pop_size, fitness, sigma, F, CR, max_iter):
     b, c, w, h = image.shape # 1 x c x w x h
     
     dim = c * w * h
-    pop = (torch.random((pop_size, dim)).cuda() * 2 - 1) * sigma # popsize x dim
+    pop = (torch.rand((pop_size, dim)).cuda() * 2 - 1) * sigma # popsize x dim
     score = fitness.benchmark(pop)
     for _ in range(max_iter):
         r1, r2, r3 = [], [], []
@@ -25,18 +25,18 @@ def DE_Attack(image, pop_size, fitness, sigma, F, CR, max_iter):
         
         j_random = np.random.randint(0, dim, size=pop_size)
         mask = torch.random((pop_size, dim)) < CR
-        mask[torch.arrange(pop_size), j_random] = True
+        mask[torch.arange(pop_size), j_random] = True
         u = torch.where(mask, v, pop)
         
-        new_fitness = fitness.benchmark(u)
-        improved = new_fitness > fitness
-        fitness[improved] = new_fitness[improved]
+        new_score = fitness.benchmark(u)
+        improved = new_score > score
+        score[improved] = new_score[improved]
         pop[improved] = u[improved]
     
-    best_idx = torch.argmax(fitness)
+    best_idx = torch.argmax(score)
     best_solution = pop[best_idx]
-    best_fitness = fitness[best_idx]
+    best_score = score[best_idx]
     best_adv_image = image + best_solution.reshape((pop_size, image.shape[1], image.shape[2], image.shape[3]))
-    best_adv_image = torch.claim(best_adv_image, 0., 1.)
+    best_adv_image = torch.clamp(best_adv_image, 0., 1.)
     
-    return best_adv_image, best_fitness
+    return best_adv_image, best_score

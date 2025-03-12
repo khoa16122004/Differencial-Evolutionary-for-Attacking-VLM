@@ -7,6 +7,7 @@ from tqdm import tqdm
 from algorithm import *
 
 def main(args):
+    seed_everything(22520691)
     # output
     os.makedirs(args.output_dir, exist_ok=True)
     # model image to text

@@ -27,7 +27,7 @@ def DE_Attack(image, pop_size, fitness, sigma, F, CR, max_iter):
         print("v shape: ", v.shape)
         
         j_random = np.random.randint(0, dim, size=pop_size)
-        mask = torch.random((pop_size, dim)) < CR
+        mask = torch.rand((pop_size, dim)) < CR
         mask[torch.arange(pop_size), j_random] = True
         u = torch.where(mask, v, pop)
         print("u shape: ", u.shape)

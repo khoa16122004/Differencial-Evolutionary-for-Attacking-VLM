@@ -28,7 +28,7 @@ def main(args):
             image, gt_txt, image_path, target_image, tar_txt, target_path = data[i]
             basename = os.path.basename(image_path)
             image = image.cuda()
-            image = image.unsquueze(0)
+            image = image.unsqueeze(0)
             
             c_clean = img_2_cap(model, image)[0]
             fitness = Fitness(image, tar_txt, clip_img_model_vitb32, args.sigma)

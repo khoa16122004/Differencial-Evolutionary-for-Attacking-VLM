@@ -51,7 +51,7 @@ if __name__ == "__main__":
     parser.add_argument("--F", type=float)
     parser.add_argument("--CR", type=float)
     parser.add_argument("--max_iter", type=int)
-    parser.add_argument("--num_sample", type=int, default=100)
+    parser.add_argument("--num_sample", type=int, default=1000)
     parser.add_argument("--model_name", default="blip2_opt", type=str)
     parser.add_argument("--model_type", default="pretrain_opt2.7b", type=str)
     args = parser.parse_args()

@@ -8,8 +8,6 @@ from algorithm import *
 
 def main(args):
     # output
-    output_dir = f"{args.output_dir}_{args.num_query}_{args.steps}_{args.alpha}_{args.epsilon}_{args.sigma}"
-    output_path = f""
     
     # model image to text
     model, _, _ = load_model_and_preprocess(name=args.model_name, model_type=args.model_type, is_value=True, device="cuda")
@@ -25,7 +23,7 @@ def main(args):
                                transform=transform,
                                num_sample=args.num_sample)
     
-    with open(output_path, "w") as f:
+    with open(args.output_dir + ".txt", "w") as f:
         for i in tqdm(range(len(data))):
             image, gt_txt, image_path, target_image, tar_txt, target_path = data[i]
             basename = os.path.basename(image_path)
@@ -41,11 +39,6 @@ def main(args):
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
             
             
-            
-            
-            
-        
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_dir", type=str)
@@ -59,8 +52,8 @@ if __name__ == "__main__":
     parser.add_argument("--num_sample", type=int)
     parser.add_argument("--model_name", default="blip2_opt", type=str)
     parser.add_argument("--model_type", default="pretrain_opt2.7b", type=str)
-    
-    
+    args = parser.parse_args()
+    main(args)
     
 
  

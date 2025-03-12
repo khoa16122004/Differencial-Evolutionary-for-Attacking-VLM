@@ -46,6 +46,7 @@ if __name__ == "__main__":
     parser.add_argument("--annotation_path", type=str)
     parser.add_argument("--output_dir", type=str)
     parser.add_argument("--pop_size", type=int)
+    parser.add_argument("--alpha", type=float, default=1)
     parser.add_argument("--sigma", type=float)
     parser.add_argument("--F", type=float)
     parser.add_argument("--max_iter", type=int)

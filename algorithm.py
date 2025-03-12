@@ -24,15 +24,12 @@ def DE_Attack(image, pop_size, fitness, sigma, F, CR, max_iter):
         x1, x2, x3 = pop[r1], pop[r2], pop[r3]
         v = x1 + F * (x2 - x3)
         v = torch.clamp(v, -sigma, sigma)
-        # print("v shape: ", v.shape)
         
         j_random = np.random.randint(0, dim, size=pop_size)
         mask = torch.rand((pop_size, dim)).cuda() < CR
         mask[torch.arange(pop_size), j_random] = True
         u = torch.where(mask, v, pop)
-        # print("u shape: ", u.shape)
         new_score = fitness.benchmark(u)
-        # print("new_score shape: ", new_score.shape)
 
         improved = new_score > score
         score[improved] = new_score[improved]

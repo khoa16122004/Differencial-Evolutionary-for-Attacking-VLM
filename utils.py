@@ -69,12 +69,14 @@ class ImageCaptionDataset(Dataset):
 
 
 class Fitness:
-    def __init__(self, image, model, pop_size, c_tar, clip_model, sigma, alpha):
+    def __init__(self, image, model, pop_size, c_tar, c_clean, clip_model, sigma, alpha):
         self.image = image
         self.c_tar = c_tar
+        self.c_clean = c_clean
         self.clip_model = clip_model
         self.model = model
         self.c_tar_embedding = self.encode_text(c_tar)
+        self.c_clean_embedding = self.encode_text(c_clean)
         self.sigma = sigma
         self.alpha = alpha
         self.pop_size = pop_size
@@ -90,10 +92,11 @@ class Fitness:
     def benchmark(self, pop):
         image_advs = self.image + self.alpha * pop.reshape((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_advs = torch.clamp(image_advs, 0., 1.)
-        print("image_advs: ", image_advs.shape)
         c_advs = img_2_cap(self.model, image_advs)
-        print("len ADV caption: ", len(c_advs))
         c_adv_embeddings = self.encode_text(c_advs)
 
-        fitness = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
+        adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
+        adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
+        fitness = adv_tar_sim - adv_clean_sim
+        print("Fitness shape: ", fitness.shape)
         return fitness

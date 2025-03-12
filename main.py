@@ -8,7 +8,7 @@ from algorithm import *
 
 def main(args):
     # output
-    
+    os.makedirs(args.output_dir, exist_ok=True)
     # model image to text
     model, _, _ = load_model_and_preprocess(name=args.model_name, model_type=args.model_type, is_value=True, device="cuda")
     model.eval()

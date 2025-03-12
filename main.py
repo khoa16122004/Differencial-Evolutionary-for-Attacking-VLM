@@ -32,12 +32,14 @@ def main(args):
             image = image.unsqueeze(0)
             
             c_clean = img_2_cap(model, image)[0]
+            print("c_clean: ", c_clean)
+            print("target text: ", tar_txt)
             fitness = Fitness(image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha)
             image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             adv_cap = img_2_cap(model, image_adv)[0]
             print("Adv cap: ", adv_cap)
             print("Best fitness: ", best_fitness)
-            torchvision.utils.save_image(image_adv, os.path.join(args.outptut_dir, basename))
+            torchvision.utils.save_image(image_adv, os.path.join(args.output_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
             
             

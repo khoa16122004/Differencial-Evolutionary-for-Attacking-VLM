@@ -69,25 +69,28 @@ class ImageCaptionDataset(Dataset):
 
 
 class Fitness:
-    def __init__(self, image, c_tar, clip_model, sigma):
+    def __init__(self, image, c_tar, clip_model, sigma, alpha):
         self.image = image
         self.c_tar = c_tar
         self.clip_model = clip_model
         self.c_tar_embedding = self.encode_text(c_tar)
         self.sigma = sigma
+        self.alpha = alpha
         
     @torch.no_grad()
     def encode_text(self, txt):
-        token = clip.tokenize(txt)
+        token = clip.tokenize(txt).cuda()
         txt_embedding = self.clip_model.encode_text(token)
         txt_embedding = txt_embedding / txt_embedding.norm(dim=1, keepdim=True)
         
         return txt_embedding
     
     def benchmark(self, pop):
-        image_advs = self.image + pop.reshape((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
+        image_advs = self.image + self.alpha * pop.reshape((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_advs = torch.clamp(image_advs, 0., 1.)
+        print("image_advs: ", image_advs.shape)
         c_advs = img_2_cap(image_advs)
+        print("len ADV caption: ", c_advs)
         c_adv_embeddings = self.encode_text(c_advs)
 
         fitness = torch.sum(self.txt_embedding * c_adv_embeddings, dim=1)

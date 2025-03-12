@@ -97,5 +97,5 @@ class Fitness:
 
         adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
         adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
-        fitness = adv_tar_sim - adv_clean_sim
-        return fitness
+        fitness_ = adv_tar_sim - adv_clean_sim
+        return fitness_

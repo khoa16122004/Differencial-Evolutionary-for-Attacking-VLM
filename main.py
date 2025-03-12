@@ -32,11 +32,11 @@ def main(args):
             
             c_clean = img_2_cap(model, image)[0]
             fitness = Fitness(image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha)
-            image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter)
+            image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             adv_cap = img_2_cap(model, image_adv)[0]
             print("Adv cap: ", adv_cap)
             print("Best fitness: ", best_fitness)
-            torchvision.utils.save_image(image_adv, os.path.join(args.ouptut_dir, basename))
+            torchvision.utils.save_image(image_adv, os.path.join(args.outptut_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
             
             
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--annotation_path", type=str)
     parser.add_argument("--output_dir", type=str)
     parser.add_argument("--pop_size", type=int)
-    parser.add_argument("--alpha", type=float, default=1)
+    parser.add_argument("--alpha", type=float, default=1.)
     parser.add_argument("--sigma", type=float)
     parser.add_argument("--F", type=float)
     parser.add_argument("--CR", type=float)

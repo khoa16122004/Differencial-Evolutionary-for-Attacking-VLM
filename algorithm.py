@@ -33,8 +33,10 @@ def DE_Attack(image, pop_size, fitness, sigma, F, CR, max_iter):
 
         improved = new_score > score
         score[improved] = new_score[improved]
-        print("Max score: ", score.max())
         pop[improved] = u[improved]
+        if score.max() >= 0:
+            break
+
     
     best_idx = torch.argmax(score)
     best_solution = pop[best_idx]

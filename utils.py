@@ -69,10 +69,11 @@ class ImageCaptionDataset(Dataset):
 
 
 class Fitness:
-    def __init__(self, image, pop_size, c_tar, clip_model, sigma, alpha):
+    def __init__(self, image, model, pop_size, c_tar, clip_model, sigma, alpha):
         self.image = image
         self.c_tar = c_tar
         self.clip_model = clip_model
+        self.model = model
         self.c_tar_embedding = self.encode_text(c_tar)
         self.sigma = sigma
         self.alpha = alpha
@@ -90,7 +91,7 @@ class Fitness:
         image_advs = self.image + self.alpha * pop.reshape((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_advs = torch.clamp(image_advs, 0., 1.)
         print("image_advs: ", image_advs.shape)
-        c_advs = img_2_cap(image_advs)
+        c_advs = img_2_cap(self.model, image_advs)
         print("len ADV caption: ", c_advs)
         c_adv_embeddings = self.encode_text(c_advs)
 

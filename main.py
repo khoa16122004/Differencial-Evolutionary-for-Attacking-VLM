@@ -34,7 +34,7 @@ def main(args):
             fitness = Fitness(image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha)
             image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter)
             adv_cap = img_2_cap(model, image_adv)[0]
-            
+            print("Adv cap: ", adv_cap)
             torchvision.utils.save_image(image_adv, os.path.join(args.ouptut_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
             

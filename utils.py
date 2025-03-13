@@ -66,7 +66,7 @@ class ImageCaptionDataset(Dataset):
         tar_txt = self.tar_txts[idx]
         target_path = os.path.join(self.target_dir, self.file_names[idx])
 
-        image_pil = Image.open(image_path).convert("RGB").resize(self.target_resolution)
+        image_pil = Image.open(image_path).convert("RGB").resize((self.target_resolution, self.target_resolution))
         target_image_pil = Image.open(target_path).convert("RGB").resize(self.target_resolution)
 
         # image_processed = vis_processors["eval"](image)

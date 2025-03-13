@@ -63,7 +63,7 @@ def main(args):
             print("Best fitness: ", best_fitness)
             torchvision.utils.save_image(image_adv, os.path.join(args.output_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
-            
+            break
             
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

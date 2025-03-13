@@ -26,7 +26,7 @@ def main(args):
     
     with open(args.output_dir + ".txt", "w") as f:
         for i in tqdm(range(args.num_sample)):
-            image_pil, image, gt_txt, image_path, target_image, tar_txt, target_path = data[i]
+            image_pil, target_image_pil, image, gt_txt, image_path, target_image, tar_txt, target_path = data[i]
             basename = os.path.basename(image_path)
             image = image.cuda()
             image = image.unsqueeze(0)

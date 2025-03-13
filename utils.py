@@ -72,8 +72,8 @@ class ImageCaptionDataset(Dataset):
         # image_processed = vis_processors["eval"](image)
         # target_image_processed = vis_processors["eval"](target_image)
         # text_processed  = txt_processors["eval"](class_text_all[original_tuple[1]])
-        image = self.transform(image)
-        target_image = self.transform(target_image)
+        image = self.transform(image_pil)
+        target_image = self.transform(target_image_pil)
         
         return image_pil, target_image_pil, image, gt_txt, image_path, target_image, tar_txt, target_path
 

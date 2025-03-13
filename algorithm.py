@@ -3,7 +3,10 @@ import clip
 import random
 import numpy as np
 from tqdm import tqdm
-from utils import putText
+from utils import putText, seed_everything
+
+seed_everything(22520691)
+
 def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max_iter, alpha):
     
     b, c, w, h = image.shape # 1 x c x w x h
@@ -51,7 +54,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     
     w, h = image.size[0], image.size[0]
     pop = torch.rand((pop_size, dim)).cuda()
-    position = (random.randint(0, int(w * 0.8)), random.randint(0, int(h * 0.8)))
+    position = (random.randint(0, int(w * 0.9)), random.randint(0, int(h * 0.9)))
     
     score = fitness.text_in_benchmark(pop, position)
     for iter_ in tqdm(range(max_iter)):
@@ -79,6 +82,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
         improved = new_score > score
         score[improved] = new_score[improved]
         pop[improved] = u[improved]
+        print("pop: ", pop)
         print("Fitness: ", score.max())
         # if score.max() >= 0:
         #     break
@@ -87,7 +91,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     best_idx = torch.argmax(score)
     best_solution = pop[best_idx]
     print("best_solution: ", best_solution)
-    angle, fontsize, R, G, B, alpha = best_solution[0] * 360, pop[best_idx, 1] * 15 + 10, pop[best_idx, 2] * 255, pop[best_idx, 3] * 255, pop[best_idx, 4] * 255, pop[best_idx, 5] * 100
+    angle, fontsize, R, G, B, alpha = best_solution[0] * 360, best_solution[1] * 15 + 10, best_solution[2] * 255, best_solution[3] * 255, best_solution[4] * 255, best_solution[5] * 100
     best_score = score[best_idx]
     best_adv_image = putText(image, position, transform, text_in, [angle], [fontsize], [R], [G], [B], [alpha])
     

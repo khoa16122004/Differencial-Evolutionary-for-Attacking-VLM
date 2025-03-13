@@ -134,7 +134,6 @@ class Fitness:
 
 def putText(image_pil, position, transform, text, angles, font_sizes, Rs, Gs, Bs, alphas, font_path='arial.ttf'):
     images = []
-    
     for angle, fontsize, R, G, B, alpha in zip(angles, font_sizes, Rs, Gs, Bs, alphas):
         img = image_pil.copy().convert("RGBA")
         txt = Image.new("RGBA", img.size, (255, 255, 255, 0))
@@ -157,5 +156,5 @@ def putText(image_pil, position, transform, text, angles, font_sizes, Rs, Gs, Bs
         pos = (position[0] - text_img.size[0] // 2, position[1] - text_img.size[1] // 2)
         img.paste(text_img, pos, text_img)
         images.append(transform(img))
-    
+        torchvision.utils.save_image(transform(img), f"angle={angle}_fontsize={fontsize}_color={R}_{G}_{B}_{alpha}.png")
     return torch.stack(images, dim=0).cuda()    

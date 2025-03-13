@@ -38,7 +38,7 @@ def main(args):
             if args.method == "text_in":
                 image_adv, best_fitness = DE_text_in_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             elif args.method == "pertubation_estimation":
-                image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
+                image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha, args.location_change_interval)
             
             adv_cap = img_2_cap(model, image_adv)[0]
             # print("Adv cap: ", adv_cap)
@@ -63,6 +63,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", default="blip2_opt", type=str)
     parser.add_argument("--model_type", default="pretrain_opt2.7b", type=str)
     parser.add_argument("--method", choices=['perturbation', 'text_in'], type=str)
+    parser.add_argument("--location_change_interval", type=int, default=10)
     args = parser.parse_args()
     main(args)
     

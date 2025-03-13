@@ -21,6 +21,7 @@ def main(args):
     data = ImageCaptionDataset(annotations_file=args.annotation_path,
                                image_dir=args.image_dir,
                                target_dir=args.target_dir,
+                               target_resolution=args.target_resolution
                                transform=transform,
                                num_sample=args.num_sample)
     
@@ -65,6 +66,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_type", default="pretrain_opt2.7b", type=str)
     parser.add_argument("--method", choices=['perturbation', 'text_in'], type=str)
     parser.add_argument("--location_change_interval", type=int, default=10)
+    parser.add_argument("--target_resolution", type=int, default=224)
     args = parser.parse_args()
     main(args)
     

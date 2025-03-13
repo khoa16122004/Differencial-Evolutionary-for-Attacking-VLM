@@ -38,14 +38,13 @@ normalize = torchvision.transforms.Compose(
 )
 
 inverse_normalize = torchvision.transforms.Normalize(mean=[-0.48145466 / 0.26862954, -0.4578275 / 0.26130258, -0.40821073 / 0.27577711], std=[1.0 / 0.26862954, 1.0 / 0.26130258, 1.0 / 0.27577711])
-
 transform = torchvision.transforms.Compose([torchvision.transforms.Lambda(lambda img: img.convert("RGB")),
                         torchvision.transforms.Resize(size=(224, 224), interpolation=torchvision.transforms.InterpolationMode.BICUBIC, max_size=None, antialias='warn'),
                         torchvision.transforms.Lambda(lambda img: to_tensor(img))])
 
 
 class ImageCaptionDataset(Dataset):
-    def __init__(self, annotations_file, image_dir, target_dir, transform=transform, num_sample=1000):
+    def __init__(self, annotations_file, image_dir, target_dir, target_resolution=224, transform=transform, num_sample=1000):
         with open(annotations_file, "r") as f:
             lines = [line.strip().split("\t") for line in f.readlines()]
             self.file_names = [line[0] for line in lines][:num_sample]
@@ -55,6 +54,7 @@ class ImageCaptionDataset(Dataset):
         self.image_dir = image_dir
         self.target_dir = target_dir
         self.transform = transform
+        self.target_resolution = target_resolution
 
         
     def __len__(self):
@@ -66,8 +66,8 @@ class ImageCaptionDataset(Dataset):
         tar_txt = self.tar_txts[idx]
         target_path = os.path.join(self.target_dir, self.file_names[idx])
 
-        image_pil = Image.open(image_path).convert("RGB")
-        target_image_pil = Image.open(target_path).convert("RGB")
+        image_pil = Image.open(image_path).convert("RGB").resize(self.target_resolution)
+        target_image_pil = Image.open(target_path).convert("RGB").resize(self.target_resolution)
 
         # image_processed = vis_processors["eval"](image)
         # target_image_processed = vis_processors["eval"](target_image)

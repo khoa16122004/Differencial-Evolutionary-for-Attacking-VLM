@@ -33,7 +33,7 @@ def main(args):
             image = image.unsqueeze(0)
             
             c_clean = img_2_cap(model, image)[0]
-            # print("c_clean: ", c_clean)
+            print("c_clean: ", c_clean)
             # print("target text: ", tar_txt)
             text_in = "dog"
             fitness = Fitness(image_pil=image_pil, 

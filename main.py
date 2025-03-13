@@ -35,7 +35,19 @@ def main(args):
             c_clean = img_2_cap(model, image)[0]
             # print("c_clean: ", c_clean)
             # print("target text: ", tar_txt)
-            fitness = Fitness(image_pil, image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha, transform)
+            text_in = "dog"
+            fitness = Fitness(image_pil=image_pil, 
+                              image=image, 
+                              text_in=text_in, 
+                              model=model, 
+                              pop_size=args.pop_size, 
+                              c_tar=tar_txt, 
+                              c_clean=c_clean, 
+                              clip_model=clip_img_model_vitb32, 
+                              sigma=args.sigma, 
+                              alpha=args.alpha, 
+                              transform=transform)
+            
             if args.method == "text_in":
                 # bounds = [[0, 1], [10, 25], [0, 1], [0, 1], [0, 1], [0, 1]]
                 image_adv, best_fitness = DE_text_in_attack(image_pil, args.pop_size, fitness, args.F, args.CR, args.max_iter, args.alpha, args.location_change_interval)

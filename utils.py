@@ -79,7 +79,7 @@ class ImageCaptionDataset(Dataset):
 
 
 class Fitness:
-    def __init__(self, image_pil, image, model, pop_size, c_tar, c_clean, clip_model, sigma, alpha, transform):
+    def __init__(self, image_pil, image, text_in, model, pop_size, c_tar, c_clean, clip_model, sigma, alpha, transform):
         self.image = image
         self.c_tar = c_tar
         self.c_clean = c_clean
@@ -92,6 +92,7 @@ class Fitness:
         self.pop_size = pop_size
         self.transform = transform
         self.image_pil = image_pil
+        self.text = text_in
         
     @torch.no_grad()
     def encode_text(self, txt):
@@ -122,7 +123,7 @@ class Fitness:
         Bs = pop[:, 4] * 255
         alphas = pop[:, 5] * 255
 
-        image_advs = putText(self.image_pil, position, angles, font_sizes, Rs, Gs, Bs, alphas)
+        image_advs = putText(self.image_pil, position, self.transform, self.text, angles, font_sizes, Rs, Gs, Bs, alphas)
         c_advs = img_2_cap(self.model, image_advs)
         c_adv_embeddings = self.encode_text(c_advs)
 

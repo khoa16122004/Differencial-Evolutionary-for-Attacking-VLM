@@ -59,7 +59,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     print("score shape: ", score.shape)
     for iter_ in tqdm(range(max_iter)):
         
-        if iter_ % location_change_interval:
+        if (iter_ + 1) % location_change_interval:
             position = (random.randint(0, int(w * 0.8)), random.randint(0, int(h * 0.8)))
         
         r1, r2, r3 = [], [], []

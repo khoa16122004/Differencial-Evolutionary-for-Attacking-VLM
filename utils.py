@@ -94,6 +94,8 @@ class Fitness:
         self.image_pil = image_pil
         self.text = text_in
         
+        
+        
     @torch.no_grad()
     def encode_text(self, txt):
         token = clip.tokenize(txt).cuda()

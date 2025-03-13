@@ -121,7 +121,7 @@ class Fitness:
         Rs = pop[:, 2] * 255
         Gs = pop[:, 3] * 255
         Bs = pop[:, 4] * 255
-        alphas = pop[:, 5] * 255
+        alphas = pop[:, 5] * 100
 
         image_advs = putText(self.image_pil, position, self.transform, self.text, angles, font_sizes, Rs, Gs, Bs, alphas)
         c_advs = img_2_cap(self.model, image_advs)

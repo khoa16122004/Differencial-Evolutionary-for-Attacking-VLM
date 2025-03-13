@@ -77,11 +77,12 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
         mask = torch.rand((pop_size, dim)).cuda() < CR
         mask[torch.arange(pop_size), j_random] = True
         u = torch.where(mask, v, pop)
-        new_score = fitness.text_in_benchmark(u)
-
+        new_score = fitness.text_in_benchmark(u, postion)
+        
         improved = new_score > score
         score[improved] = new_score[improved]
         pop[improved] = u[improved]
+        print("Fitness: ", score.max())
         if score.max() >= 0:
             break
 

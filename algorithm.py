@@ -56,7 +56,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     pop = torch.rand((pop_size, dim)).cuda()
     position = (random.randint(0, int(w * 0.9)), random.randint(0, int(h * 0.9)))
     best_fitness = 0
-    best_position = None
+    best_position = position.copy()
     
     score = fitness.text_in_benchmark(pop, position)
     for iter_ in tqdm(range(max_iter)):

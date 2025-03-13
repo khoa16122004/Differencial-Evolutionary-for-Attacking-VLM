@@ -49,7 +49,8 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
 def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location_change_interval):
     dim = 6
     
-    w, h = image.size[0], image.shape[0]
+    w, h = image.size[0], image.size[0]
+    print("w, h", w, h)
     pop = torch.rand((pop_size, dim)).cuda()
     postion = (random.randint(0, w * 0.8), random.randint(0, h * 0.8))
     print("Position: ", postion)

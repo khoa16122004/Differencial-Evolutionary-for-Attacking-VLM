@@ -54,9 +54,9 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     
     w, h = image.size[0], image.size[0]
     pop = torch.rand((pop_size, dim)).cuda()
-    position, c_advs = (random.randint(0, int(w * 0.9)), random.randint(0, int(h * 0.9)))
+    position = (random.randint(0, int(w * 0.9)), random.randint(0, int(h * 0.9)))
     
-    score = fitness.text_in_benchmark(pop, position)
+    score, c_advs = fitness.text_in_benchmark(pop, position)
     for iter_ in tqdm(range(max_iter)):
         
         if (iter_ + 1) % location_change_interval:

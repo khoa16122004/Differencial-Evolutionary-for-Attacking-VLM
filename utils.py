@@ -6,6 +6,8 @@ from PIL import Image
 import os
 import clip
 import random
+from PIL import Image, ImageDraw, ImageFont
+
 def seed_everything(seed: int):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
@@ -64,21 +66,20 @@ class ImageCaptionDataset(Dataset):
         tar_txt = self.tar_txts[idx]
         target_path = os.path.join(self.target_dir, self.file_names[idx])
 
-        image = Image.open(image_path).convert("RGB")
-        target_image = Image.open(target_path).convert("RGB")
+        image_pil = Image.open(image_path).convert("RGB")
+        target_image_pil = Image.open(target_path).convert("RGB")
 
         # image_processed = vis_processors["eval"](image)
         # target_image_processed = vis_processors["eval"](target_image)
         # text_processed  = txt_processors["eval"](class_text_all[original_tuple[1]])
-        if self.transform:
-            image = self.transform(image)
-            target_image = self.transform(target_image)
+        image = self.transform(image)
+        target_image = self.transform(target_image)
         
-        return image, gt_txt, image_path, target_image, tar_txt, target_path
+        return image_pil, target_image_pil, image, gt_txt, image_path, target_image, tar_txt, target_path
 
 
 class Fitness:
-    def __init__(self, image, model, pop_size, c_tar, c_clean, clip_model, sigma, alpha):
+    def __init__(self, image_pil, image, model, pop_size, c_tar, c_clean, clip_model, sigma, alpha, transform):
         self.image = image
         self.c_tar = c_tar
         self.c_clean = c_clean
@@ -89,6 +90,7 @@ class Fitness:
         self.sigma = sigma
         self.alpha = alpha
         self.pop_size = pop_size
+        self.transform = transform
         
     @torch.no_grad()
     def encode_text(self, txt):
@@ -98,7 +100,7 @@ class Fitness:
         
         return txt_embedding
     
-    def benchmark(self, pop):
+    def pertubation_benchmark(self, pop):
         image_advs = self.image + self.alpha * pop.reshape((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_advs = torch.clamp(image_advs, 0., 1.)
         c_advs = img_2_cap(self.model, image_advs)
@@ -108,3 +110,50 @@ class Fitness:
         adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
         fitness_ = adv_tar_sim - adv_clean_sim
         return fitness_
+    
+    def text_in_benchmark(self, pop, position):
+        # candidate = [angle, font_size, R, G, B, alpha]
+        # bounds = [[0, 360], [10, 25], [0, 1], [0, 1], [0, 1], [0, 1]]
+        angles = pop[:, 0] * 360
+        font_sizes = pop[:, 1] * 15 + 10
+        Rs = pop[:, 2] * 255
+        Gs = pop[:, 3] * 255
+        Bs = pop[:, 4] * 255
+        alphas = pop[:, 5] * 255
+
+        image_advs = putText(self.image_pil, position, angles, font_sizes, Rs, Gs, Bs, alphas)
+        c_advs = img_2_cap(self.model, image_advs)
+        c_adv_embeddings = self.encode_text(c_advs)
+
+        adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
+        adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
+        fitness_ = adv_tar_sim - adv_clean_sim
+        return fitness_
+
+def putText(image_pil, position, transform, text, angles, font_sizes, Rs, Gs, Bs, alphas, font_path='arial.ttf'):
+    images = []
+    
+    for angle, fontsize, R, G, B, alpha in zip(angles, font_sizes, Rs, Gs, Bs, alphas):
+        img = image_pil.copy().convert("RGBA")
+        txt = Image.new("RGBA", img.size, (255, 255, 255, 0))
+        draw = ImageDraw.Draw(txt)
+        
+        try:
+            font = ImageFont.truetype(font_path, int(fontsize.item()))
+        except:
+            font = ImageFont.load_default()
+        
+        text_size = draw.textbbox((0, 0), text, font=font)
+        text_width, text_height = text_size[2] - text_size[0], text_size[3] - text_size[1]
+        text_height += int(fontsize.item() * 0.3)  # Add padding for descenders
+        
+        text_img = Image.new("RGBA", (text_width, text_height), (255, 255, 255, 0))
+        draw_text = ImageDraw.Draw(text_img)
+        draw_text.text((0, 0), text, font=font, fill=(int(R.item()), int(G.item()), int(B.item()), int(alpha.item())))
+        
+        text_img = text_img.rotate(angle.item(), expand=True)
+        pos = (position[0] - text_img.size[0] // 2, position[1] - text_img.size[1] // 2)
+        img.paste(text_img, pos, text_img)
+        images.append(transform(img))
+    
+    return torch.stack(images, dim=0).cuda()    

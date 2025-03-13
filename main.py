@@ -26,19 +26,23 @@ def main(args):
     
     with open(args.output_dir + ".txt", "w") as f:
         for i in tqdm(range(args.num_sample)):
-            image, gt_txt, image_path, target_image, tar_txt, target_path = data[i]
+            image_pil, image, gt_txt, image_path, target_image, tar_txt, target_path = data[i]
             basename = os.path.basename(image_path)
             image = image.cuda()
             image = image.unsqueeze(0)
             
             c_clean = img_2_cap(model, image)[0]
-            print("c_clean: ", c_clean)
-            print("target text: ", tar_txt)
-            fitness = Fitness(image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha)
-            image_adv, best_fitness = DE_Attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
+            # print("c_clean: ", c_clean)
+            # print("target text: ", tar_txt)
+            fitness = Fitness(image_pil, image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha)
+            if args.attack_type == "text_in":
+                image_adv, best_fitness = DE_text_in_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
+            elif args.attack_type == "pertubation_estimation":
+                image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
+            
             adv_cap = img_2_cap(model, image_adv)[0]
-            print("Adv cap: ", adv_cap)
-            print("Best fitness: ", best_fitness)
+            # print("Adv cap: ", adv_cap)
+            # print("Best fitness: ", best_fitness)
             torchvision.utils.save_image(image_adv, os.path.join(args.output_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")
             
@@ -58,6 +62,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_sample", type=int, default=1000)
     parser.add_argument("--model_name", default="blip2_opt", type=str)
     parser.add_argument("--model_type", default="pretrain_opt2.7b", type=str)
+    parser.add_argument("--method", choice=['perturbation', 'text_in'], type=str)
     args = parser.parse_args()
     main(args)
     

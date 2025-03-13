@@ -59,13 +59,13 @@ def main(args):
                 image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             
             adv_cap = img_2_cap(model, image_adv)[0]
-            # print("Adv cap: ", adv_cap)
-            # print("Best fitness: ", best_fitness)
+            print("Adv cap: ", adv_cap)
+            print("Best fitness: ", best_fitness)
             
             adv_sim = torch.sum(fitness.c_tar_embedding * fitness.encode_text(adv_cap), dim=1)
             clean_sim = torch.sum(fitness.c_clean_embedding * fitness.encode_text(adv_cap), dim=1)
-            # print("Adv sim: ", adv_sim)
-            # print("Clean sim: ", clean_sim)
+            print("Adv sim: ", adv_sim)
+            print("Clean sim: ", clean_sim)
             
             torchvision.utils.save_image(image_adv, os.path.join(args.output_dir, basename))
             f.write(f"{basename}\t{c_clean}\t{tar_txt}\t{adv_cap}\n")

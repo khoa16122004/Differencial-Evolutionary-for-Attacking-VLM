@@ -62,7 +62,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_sample", type=int, default=1000)
     parser.add_argument("--model_name", default="blip2_opt", type=str)
     parser.add_argument("--model_type", default="pretrain_opt2.7b", type=str)
-    parser.add_argument("--method", choice=['perturbation', 'text_in'], type=str)
+    parser.add_argument("--method", choices=['perturbation', 'text_in'], type=str)
     args = parser.parse_args()
     main(args)
     

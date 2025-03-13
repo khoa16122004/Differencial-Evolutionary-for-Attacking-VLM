@@ -41,7 +41,7 @@ def main(args):
                               text_in=text_in, 
                               model=model, 
                               pop_size=args.pop_size, 
-                              c_tar=tar_txt, 
+                              c_tar="A dog playing with cat", 
                               c_clean=c_clean, 
                               clip_model=clip_img_model_vitb32, 
                               sigma=args.sigma, 

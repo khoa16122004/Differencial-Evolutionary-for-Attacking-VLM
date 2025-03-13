@@ -21,7 +21,7 @@ def main(args):
     data = ImageCaptionDataset(annotations_file=args.annotation_path,
                                image_dir=args.image_dir,
                                target_dir=args.target_dir,
-                               target_resolution=args.target_resolution
+                               target_resolution=args.target_resolution,
                                transform=transform,
                                num_sample=args.num_sample)
     

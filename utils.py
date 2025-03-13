@@ -91,6 +91,7 @@ class Fitness:
         self.alpha = alpha
         self.pop_size = pop_size
         self.transform = transform
+        self.image_pil = image_pil
         
     @torch.no_grad()
     def encode_text(self, txt):

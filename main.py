@@ -34,7 +34,7 @@ def main(args):
             c_clean = img_2_cap(model, image)[0]
             # print("c_clean: ", c_clean)
             # print("target text: ", tar_txt)
-            fitness = Fitness(image_pil, image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha)
+            fitness = Fitness(image_pil, image, model, args.pop_size, tar_txt, c_clean, clip_img_model_vitb32, args.sigma, args.alpha, transform)
             if args.attack_type == "text_in":
                 image_adv, best_fitness = DE_text_in_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             elif args.attack_type == "pertubation_estimation":

@@ -46,10 +46,8 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
     
     return best_adv_image, best_score
 
-def DE_text_in_attack(image,  bounds, pop_size, fitness, F, CR, max_iter, alpha, location_change_interval):
-    dim = len(bounds)
-    lower_bounds = [bound[0] for bound in bounds]
-    upper_bounds = [bound[1] for bound in bounds]
+def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location_change_interval):
+    dim = 6
     
     w, h = image.size[0], image.shape[0]
     pop = torch.rand((pop_size, dim)).cuda()
@@ -72,7 +70,7 @@ def DE_text_in_attack(image,  bounds, pop_size, fitness, F, CR, max_iter, alpha,
         
         x1, x2, x3 = pop[r1], pop[r2], pop[r3]
         v = x1 + F * (x2 - x3)
-        v = torch.clamp(v, lower_bounds, upper_bounds)
+        v = torch.clamp(v, 0, 1)
         
         j_random = np.random.randint(0, dim, size=pop_size)
         mask = torch.rand((pop_size, dim)).cuda() < CR

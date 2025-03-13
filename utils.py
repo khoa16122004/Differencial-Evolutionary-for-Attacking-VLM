@@ -79,7 +79,11 @@ class ImageCaptionDataset(Dataset):
 
 
 class Fitness:
-    def __init__(self, image_pil, image, text_in, model, pop_size, c_tar, c_clean, clip_model, sigma, alpha, transform):
+    def __init__(self, image_pil, image, 
+                 text_in, model, 
+                 pop_size, c_tar, 
+                 c_clean, clip_model, 
+                 sigma, alpha, transform):
         self.image = image
         self.c_tar = c_tar
         self.c_clean = c_clean
@@ -132,6 +136,7 @@ class Fitness:
 
         adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
         adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
+        print(adv_tar_sim, adv_clean_sim)
         fitness_ = adv_tar_sim - adv_clean_sim
         return fitness_
 

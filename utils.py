@@ -156,5 +156,5 @@ def putText(image_pil, position, transform, text, angles, font_sizes, Rs, Gs, Bs
         pos = (position[0] - text_img.size[0] // 2, position[1] - text_img.size[1] // 2)
         img.paste(text_img, pos, text_img)
         images.append(transform(img))
-        torchvision.utils.save_image(transform(img), f"angle={angle}_fontsize={fontsize}_color={R}_{G}_{B}_{alpha}.png")
+        # torchvision.utils.save_image(transform(img), f"angle={angle}_fontsize={fontsize}_color={R}_{G}_{B}_{alpha}.png")
     return torch.stack(images, dim=0).cuda()    

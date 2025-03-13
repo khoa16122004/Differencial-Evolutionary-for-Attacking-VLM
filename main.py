@@ -50,7 +50,11 @@ def main(args):
             
             if args.method == "text_in":
                 # bounds = [[0, 1], [10, 25], [0, 1], [0, 1], [0, 1], [0, 1]]
-                image_adv, best_fitness = DE_text_in_attack(image_pil, args.pop_size, fitness, args.F, args.CR, args.max_iter, args.alpha, args.location_change_interval)
+                image_adv, best_fitness = DE_text_in_attack(image_pil, args.pop_size,
+                                                            fitness, args.F, args.CR,
+                                                            args.max_iter, args.alpha, 
+                                                            args.location_change_interval, 
+                                                            transform, text_in)
             elif args.method == "pertubation_estimation":
                 image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             

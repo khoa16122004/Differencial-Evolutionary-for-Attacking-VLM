@@ -137,7 +137,7 @@ class Fitness:
         adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
         
         fitness_ = adv_tar_sim - adv_clean_sim
-        return fitness_
+        return fitness_, c_advs
 
 def putText(image_pil, position, transform, text, angles, font_sizes, Rs, Gs, Bs, alphas, font_path='arial.ttf'):
     images = []

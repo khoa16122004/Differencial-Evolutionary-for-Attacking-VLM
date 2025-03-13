@@ -55,6 +55,8 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     w, h = image.size[0], image.size[0]
     pop = torch.rand((pop_size, dim)).cuda()
     position = (random.randint(0, int(w * 0.9)), random.randint(0, int(h * 0.9)))
+    best_fitness = 0
+    best_position = None
     
     score = fitness.text_in_benchmark(pop, position)
     for iter_ in tqdm(range(max_iter)):
@@ -83,7 +85,14 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
         score[improved] = new_score[improved]
         pop[improved] = u[improved]
         print("pop: ", pop)
-        print("Fitness: ", score.max())
+        current_best_fitness = score.max()
+        print("Fitness: ", current_best_fitness)
+        if best_fitness < score.max():
+            best_fitness = score.max()
+        
+        if best_fitness < current_best_fitness:
+            best_fitness = current_best_fitness
+            best_position = position
         # if score.max() >= 0:
         #     break
 
@@ -93,6 +102,6 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     print("best_solution: ", best_solution)
     angle, fontsize, R, G, B, alpha = best_solution[0] * 360, best_solution[1] * 15 + 10, best_solution[2] * 255, best_solution[3] * 255, best_solution[4] * 255, best_solution[5] * 100
     best_score = score[best_idx]
-    best_adv_image = putText(image, position, transform, text_in, [angle], [fontsize], [R], [G], [B], [alpha])
+    best_adv_image = putText(image, best_position, transform, text_in, [angle], [fontsize], [R], [G], [B], [alpha])
     
     return best_adv_image, best_score

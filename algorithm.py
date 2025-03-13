@@ -90,6 +90,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     best_idx = torch.argmax(score)
     best_solution = pop[best_idx]
     print("best_solution: ", best_solution)
+    angle, fontsize, R, G, B, alpha = best_solution[0] * 360, pop[best_idx, 1] * 15 + 10, pop[best_idx, 2] * 255, pop[best_idx, 3] * 255, pop[best_idx, 4] * 255, pop[best_idx, 5] * 100
     best_score = score[best_idx]
     best_adv_image = putText(image, position, **best_solution)
     

@@ -80,8 +80,8 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
         score[improved] = new_score[improved]
         pop[improved] = u[improved]
         print("Fitness: ", score.max())
-        if score.max() >= 0:
-            break
+        # if score.max() >= 0:
+        #     break
 
     
     best_idx = torch.argmax(score)

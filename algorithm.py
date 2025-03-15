@@ -34,6 +34,7 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
 
         improved = new_score > score
         score[improved] = new_score[improved]
+        pop[improved] = u[improved]
         
         best_current_index = torch.argmax(score)
         best_current_score = score[best_current_index]
@@ -41,6 +42,8 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
         
         print("Best score: ", best_current_score)
         print("Best c_adv: ", best_current_c_adv)
+        
+        
         
         pop[improved] = u[improved]
         if score.max() >= 0:

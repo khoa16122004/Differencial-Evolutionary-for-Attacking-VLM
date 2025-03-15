@@ -122,6 +122,10 @@ class Fitness:
         print("tar clean sim: ", tar_clean_sim)
         print("adv tar sim: ", adv_tar_sim)
         fitness_ = adv_tar_sim - tar_clean_sim
+        
+        best_candidate = pop[torch.argmax(fitness_)]
+        image_adv = self.image + self.alpha * best_candidate.reshape((1, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
+        print("best candidate cap: ", img_2_cap(self.model, image_adv))
         return fitness_, c_advs
     
     def text_in_benchmark(self, pop, position):

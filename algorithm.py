@@ -49,10 +49,10 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
     
     return best_adv_image, best_score
 
-def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location_change_interval, transform, text_in):
+def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, location_change_interval, transform, text_in):
     dim = 6
     
-    w, h = image.size[0], image.size[0]
+    w, h = image.size
     pop = torch.rand((pop_size, dim)).cuda()
     position = (random.randint(0, int(w * 0.9)), random.randint(0, int(h * 0.9)))
     best_fitness = 0
@@ -60,8 +60,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
     
     score = fitness.text_in_benchmark(pop, position)
     for iter_ in tqdm(range(max_iter)):
-        
-        if (iter_ + 1) % location_change_interval:
+        if (iter_ + 1) % location_change_interval == 0:
             position = (random.randint(0, int(w * 0.8)), random.randint(0, int(h * 0.8)))
         
         r1, r2, r3 = [], [], []
@@ -87,8 +86,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, alpha, location
         print("pop: ", pop)
         current_best_fitness = score.max()
         print("Fitness: ", current_best_fitness)
-        if best_fitness < score.max():
-            best_fitness = score.max()
+
         
         if best_fitness < current_best_fitness:
             best_fitness = current_best_fitness

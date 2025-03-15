@@ -45,17 +45,16 @@ def main(args):
                               c_clean=c_clean, 
                               clip_model=clip_img_model_vitb32, 
                               sigma=args.sigma, 
-                              alpha=args.alpha, 
                               transform=transform)
             
             if args.method == "text_in":
                 # bounds = [[0, 1], [10, 25], [0, 1], [0, 1], [0, 1], [0, 1]]
                 image_adv, best_fitness = DE_text_in_attack(image_pil, args.pop_size,
                                                             fitness, args.F, args.CR,
-                                                            args.max_iter, args.alpha, 
+                                                            args.max_iter, 
                                                             args.location_change_interval, 
                                                             transform, text_in)
-            elif args.method == "pertubation_estimation":
+            elif args.method == "pertubation":
                 image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             
             adv_cap = img_2_cap(model, image_adv)[0]

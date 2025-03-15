@@ -13,7 +13,7 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
     
     dim = c * w * h
     pop = (torch.rand((pop_size, dim)).cuda() * 2 - 1) * sigma # popsize x dim
-    score, c_advs = fitness.pertubation_benchmark(pop)
+    score = fitness.pertubation_benchmark(pop)
     for _ in tqdm(range(max_iter)):
         r1, r2, r3 = [], [], []
         for i in range(pop_size):
@@ -34,6 +34,9 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
 
         improved = new_score > score
         score[improved] = new_score[improved]
+        
+        print("score: ", score.max())
+        
         pop[improved] = u[improved]
         if score.max() >= 0:
             break

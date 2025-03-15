@@ -45,7 +45,8 @@ def main(args):
                               c_tar="A dog playing with cat", 
                               c_clean=c_clean, 
                               clip_model=clip_img_model_vitb32, 
-                              sigma=args.sigma, 
+                              sigma=args.sigma,
+                              alpha=args.alpha,
                               transform=transform)
             
             if args.method == "text_in":

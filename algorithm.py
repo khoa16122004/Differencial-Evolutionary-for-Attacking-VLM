@@ -37,7 +37,7 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
         
         best_current_index = torch.argmax(score)
         best_current_score = score[best_current_index]
-        best_current_c_adv = score[best_current_index]
+        best_current_c_adv = c_advs[best_current_index]
         
         print("Best score: ", best_current_score)
         print("Best c_adv: ", best_current_c_adv)

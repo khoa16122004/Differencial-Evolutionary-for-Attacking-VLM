@@ -32,8 +32,9 @@ def main(args):
             image = image.cuda()
             image = image.unsqueeze(0)
             
-            c_clean = img_2_cap(model, image)[0]
-            print("c_clean: ", c_clean)
+            # c_clean = img_2_cap(model, image)[0]
+            # print("c_clean: ", c_clean)
+            c_clean = gt_txt
             # print("target text: ", tar_txt)
             text_in = "dog"
             fitness = Fitness(image_pil=image_pil, 

@@ -113,13 +113,10 @@ class Fitness:
         image_advs = torch.clamp(image_advs, 0., 1.)
         c_advs = img_2_cap(self.model, image_advs)
         c_adv_embeddings = self.encode_text(c_advs)
-        print("c_advs: ", c_advs)
         adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
         adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
-        print("adv_clean_sim: ", adv_clean_sim)
-        print("adv_tar_sim: ", adv_tar_sim)
         fitness_ = adv_tar_sim - adv_clean_sim
-        return fitness_
+        return fitness_, c_advs
     
     def text_in_benchmark(self, pop, position):
         # candidate = [angle, font_size, R, G, B, alpha]
@@ -133,11 +130,10 @@ class Fitness:
 
         image_advs = putText(self.image_pil, position, self.transform, self.text, angles, font_sizes, Rs, Gs, Bs, alphas)
         c_advs = img_2_cap(self.model, image_advs)
-        print(c_advs)
         c_adv_embeddings = self.encode_text(c_advs)
 
         adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
-        adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
+        adv_clean_sim = torch.sum(self.c_clean_embedding * self.c_tar_embeddings, dim=1)
         
         fitness_ = adv_tar_sim - adv_clean_sim
         return fitness_

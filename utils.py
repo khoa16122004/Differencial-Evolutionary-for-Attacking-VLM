@@ -114,7 +114,7 @@ class Fitness:
         c_advs = img_2_cap(self.model, image_advs)
         c_adv_embeddings = self.encode_text(c_advs)
         adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
-        adv_clean_sim = torch.sum(self.c_clean_embedding * c_adv_embeddings, dim=1)
+        adv_clean_sim = torch.sum(self.c_clean_embedding * self.c_tar_embedding, dim=1)
         fitness_ = adv_tar_sim - adv_clean_sim
         return fitness_
     

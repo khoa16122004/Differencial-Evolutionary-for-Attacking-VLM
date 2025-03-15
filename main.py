@@ -56,7 +56,7 @@ def main(args):
                                                             args.max_iter, 
                                                             args.location_change_interval, 
                                                             transform, text_in)
-            elif args.method == "pertubation":
+            elif args.method == "perturbation":
                 image_adv, best_fitness = DE_pertubation_estimation_attack(image, args.pop_size, fitness, args.sigma, args.F, args.CR, args.max_iter, args.alpha)
             
             adv_cap = img_2_cap(model, image_adv)[0]

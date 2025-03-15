@@ -13,7 +13,7 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
     
     dim = c * w * h
     pop = (torch.rand((pop_size, dim)).cuda() * 2 - 1) * sigma # popsize x dim
-    score = fitness.pertubation_benchmark(pop)
+    score, c_advs = fitness.pertubation_benchmark(pop)
     for _ in tqdm(range(max_iter)):
         r1, r2, r3 = [], [], []
         for i in range(pop_size):
@@ -30,12 +30,17 @@ def DE_pertubation_estimation_attack(image, pop_size, fitness, sigma, F, CR, max
         mask = torch.rand((pop_size, dim)).cuda() < CR
         mask[torch.arange(pop_size), j_random] = True
         u = torch.where(mask, v, pop)
-        new_score = fitness.pertubation_benchmark(u)
+        new_score, c_advs = fitness.pertubation_benchmark(u)
 
         improved = new_score > score
         score[improved] = new_score[improved]
         
-        print("score: ", score.max())
+        best_current_index = torch.argmax(score)
+        best_current_score = score[best_current_index]
+        best_current_c_adv = score[best_current_index]
+        
+        print("Best score: ", best_current_score)
+        print("Best c_adv: ", best_current_c_adv)
         
         pop[improved] = u[improved]
         if score.max() >= 0:
@@ -59,7 +64,7 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, location_change
     best_fitness = 0
     best_position = position
     
-    score = fitness.text_in_benchmark(pop, position)
+    score, c_advs = fitness.text_in_benchmark(pop, position)
     for iter_ in tqdm(range(max_iter)):
         if (iter_ + 1) % location_change_interval == 0:
             position = (random.randint(0, int(w * 0.8)), random.randint(0, int(h * 0.8)))
@@ -79,12 +84,11 @@ def DE_text_in_attack(image, pop_size, fitness, F, CR, max_iter, location_change
         mask = torch.rand((pop_size, dim)).cuda() < CR
         mask[torch.arange(pop_size), j_random] = True
         u = torch.where(mask, v, pop)
-        new_score = fitness.text_in_benchmark(u, position)
+        new_score, c_advs = fitness.text_in_benchmark(u, position)
         
         improved = new_score > score
         score[improved] = new_score[improved]
         pop[improved] = u[improved]
-        print("pop: ", pop)
         current_best_fitness = score.max()
         print("Fitness: ", current_best_fitness)
 

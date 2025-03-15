@@ -16,8 +16,12 @@ def seed_everything(seed: int):
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
+    
+
 
 def img_2_cap(model, image):
+    seed_everything(22520691)
+
     image_ = image.clone()
     samples = {"image": image_}
     caption = model.generate(samples, use_nucleus_sampling=True)
@@ -118,7 +122,7 @@ class Fitness:
         print("tar clean sim: ", tar_clean_sim)
         print("adv tar sim: ", adv_tar_sim)
         fitness_ = adv_tar_sim - tar_clean_sim
-        return fitness_
+        return fitness_, c_advs
     
     def text_in_benchmark(self, pop, position):
         # candidate = [angle, font_size, R, G, B, alpha]

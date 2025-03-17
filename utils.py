@@ -118,7 +118,6 @@ class Fitness:
         image_advs = torch.clamp(image_advs, 0., 1.)
         c_advs = img_2_cap(self.model, image_advs)
         print("advs: ", c_advs)
-        print(image_advs[i].shape)
         for i in range(len(c_advs)):
             c_adv = img_2_cap(self.model, image_advs[i].unsqueeze(0))
             print(c_adv)

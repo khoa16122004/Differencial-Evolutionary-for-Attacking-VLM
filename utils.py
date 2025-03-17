@@ -124,6 +124,7 @@ class Fitness:
         fitness_ = adv_tar_sim - tar_clean_sim
         
         best_candidate = torch.argmax(fitness_)
+        print("Best caption: ", c_advs[best_candidate])
         image_adv = self.image + self.alpha * pop[best_candidate].reshape((1, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_adv_ = image_advs[best_candidate]
         print((image_adv_ - image_adv).sum())

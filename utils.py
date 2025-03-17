@@ -99,6 +99,9 @@ class Fitness:
         self.c_clean_embedding = self.encode_text(c_clean)
         
         print(torch.sum(self.c_tar_embedding * self.c_clean_embedding, dim=1))
+        test = "a little girl in a pink dress standing on the steps of a chicken coop"
+        test_embedidng = self.encode_text(test)
+        print("test: ", torch.sum(self.c_tar_embedding * test_embedidng, dim=1))
         
         self.sigma = sigma
         self.alpha = alpha

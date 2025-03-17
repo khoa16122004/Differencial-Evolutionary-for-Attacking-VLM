@@ -18,7 +18,7 @@ def seed_everything(seed: int):
     torch.backends.cudnn.benchmark = True
     
 
-
+@torch.no_grad()
 def img_2_cap(model, image):
     seed_everything(22520691)
 
@@ -123,8 +123,10 @@ class Fitness:
         print("adv tar sim: ", adv_tar_sim)
         fitness_ = adv_tar_sim - tar_clean_sim
         
-        best_candidate = pop[torch.argmax(fitness_)]
+        best_candidate = torch.argmax(fitness_)
         image_adv = self.image + self.alpha * best_candidate.reshape((1, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
+        image_adv_ = image_advs[best_candidate]
+        print(image_adv_ - image_adv)
         print("best candidate cap: ", img_2_cap(self.model, image_adv))
         return fitness_, c_advs
     

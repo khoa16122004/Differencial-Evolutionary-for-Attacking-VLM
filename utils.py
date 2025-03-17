@@ -114,7 +114,7 @@ class Fitness:
     
     def pertubation_benchmark(self, pop):
         
-        image_advs = self.image.repeat(self.pop_size, 1, 1, 1) + self.alpha * pop.reshape((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
+        image_advs = self.image.repeat(self.pop_size, 1, 1, 1) + self.alpha * pop.view((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_advs = torch.clamp(image_advs, 0., 1.)
         c_advs = img_2_cap(self.model, image_advs)
         c_adv_embeddings = self.encode_text(c_advs)
@@ -127,7 +127,7 @@ class Fitness:
         best_candidate = torch.argmax(fitness_)
         print("Best caption: ", c_advs[best_candidate])
         print("best_caption: ", img_2_cap(self.model, image_advs[best_candidate].unsqueeze(0)))
-        image_adv = self.image + self.alpha * pop[best_candidate].reshape((1, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
+        image_adv = self.image + self.alpha * pop[best_candidate].view((1, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_adv_ = image_advs[best_candidate]
         print((image_adv_ - image_adv).sum())
         print("best candidate cap: ", img_2_cap(self.model, image_adv))

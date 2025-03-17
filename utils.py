@@ -117,20 +117,18 @@ class Fitness:
         image_advs = self.image.repeat(self.pop_size, 1, 1, 1) + self.alpha * pop.view((self.pop_size, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
         image_advs = torch.clamp(image_advs, 0., 1.)
         c_advs = img_2_cap(self.model, image_advs)
+        print("advs: ", c_advs)
+        
+        for i in range(len(c_advs)):
+            c_adv = img_2_cap(self.model, image_advs[i].unsqueeze(0))
+            print(c_adv)
+        
         c_adv_embeddings = self.encode_text(c_advs)
         adv_tar_sim = torch.sum(self.c_tar_embedding * c_adv_embeddings, dim=1)
         tar_clean_sim = torch.sum(self.c_clean_embedding * self.c_tar_embedding, dim=1)
-        print("tar clean sim: ", tar_clean_sim)
-        print("adv tar sim: ", adv_tar_sim)
         fitness_ = adv_tar_sim - tar_clean_sim
         
         best_candidate = torch.argmax(fitness_)
-        print("Best caption: ", c_advs[best_candidate])
-        print("best_caption: ", img_2_cap(self.model, image_advs[best_candidate].unsqueeze(0)))
-        image_adv = self.image + self.alpha * pop[best_candidate].view((1, self.image.shape[1], self.image.shape[2], self.image.shape[3]))
-        image_adv_ = image_advs[best_candidate]
-        print((image_adv_ - image_adv).sum())
-        print("best candidate cap: ", img_2_cap(self.model, image_adv))
         return fitness_, c_advs
     
     def text_in_benchmark(self, pop, position):

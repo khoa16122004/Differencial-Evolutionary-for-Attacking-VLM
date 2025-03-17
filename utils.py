@@ -90,11 +90,16 @@ class Fitness:
                  sigma, alpha, transform):
         self.image = image
         self.c_tar = c_tar
+        print("C target: ", c_tar)
         self.c_clean = c_clean
+        print("C clean: ", c_clean)
         self.clip_model = clip_model
         self.model = model
         self.c_tar_embedding = self.encode_text(c_tar)
         self.c_clean_embedding = self.encode_text(c_clean)
+        
+        print(torch.sum("self.c_tar_embedding * self.c_clean_embedding", dim=1))
+        
         self.sigma = sigma
         self.alpha = alpha
         self.pop_size = pop_size

@@ -24,7 +24,7 @@ def img_2_cap(model, image):
 
     image_ = image.clone()
     samples = {"image": image_}
-    caption = model.generate(samples, use_nucleus_sampling=True)
+    caption = model.generate(samples, use_nucleus_sampling=False)
     return caption
 
 def to_tensor(pic):
